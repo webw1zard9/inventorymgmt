@@ -1,0 +1,30 @@
+{
+    "private": true,
+    "scripts": {
+        "dev": "npm run development",
+        "development": "mix",
+        "watch": "mix watch",
+        "watch-poll": "mix watch -- --watch-options-poll=1000",
+        "hot": "mix watch --hot",
+        "prod": "npm run production",
+        "production": "mix --production"
+    },
+    "devDependencies": {
+        "bootstrap-sass": "^3.4.3",
+        "jquery": "^1.12.4",
+        "laravel-mix": "^6.0.49",
+        "lodash": "^4.17.21",
+        "postcss": "^8.4.24",
+        "resolve-url-loader": "^5.0.0",
+        "sass": "^1.56.1",
+        "sass-loader": "^12.1.0"
+    },
+    "dependencies": {
+        "chart.js": "^3.9.1",
+        "hammerjs": "^2.0.8",
+        "jquery-typeahead": "^2.11.1",
+        "npm": "^6.14.16",
+        "vue": "^2.5.16",
+        "axios": "^0.26.1"
+    }
+}
