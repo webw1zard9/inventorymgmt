@@ -16,7 +16,11 @@ Create your .env file
 
     $ mv .env.example .env
 
-Create an empty database for our application. In the .env file, add database information to allow Laravel to connect to the database
+Generate an app encryption key
+
+    $ php artisan key:generate
+
+Create an empty database for your application. In the .env file, add database information to allow Laravel to connect to the database
 
     DB_CONNECTION=mysql
     DB_HOST=127.0.0.1
@@ -25,41 +29,49 @@ Create an empty database for our application. In the .env file, add database inf
     DB_USERNAME=
     DB_PASSWORD=
 
+Update any other configuration settings in the .env file, such as the email driver, email host, email address, etc
+You can also set 'Product Types' and 'Product Unit of Measure'
+
+    PRODUCT_TYPES=Product,Service
+    PRODUCT_UOM=Unit,Dozen
+
 Install Composer dependencies. The database will be migrated after dependencies are installed. 
 
     $ composer install 
+
+On some VPS/Cloud servers the `storage` folder may not be writable. If you experience issues, create the necessary folders and assign the correct permissions:
+
+    $ mkdir -p ./storage/framework/sessions storage/framework/views storage/framework/cache/data
+    $ chmod -R 775 ./storage
+    $ composer install
 
 Install Node dependencies
 
     $ npm install
 
-On some VPS/Cloud servers the `storage` folder may not be writable. To fix this issue, run the following command:
-
-    $ chmod -R 775 ./storage
-
-Generate an app encryption key
-
-    $ php artisan key:generate
-
-Migrate the database
+Migrate the database (This might have already been done when Composer dependencies were installed)
 
     $ php artisan migrate
 
-(Optional): Populate the database with seed data
+Populate the database with seed data. This will create a user allowing you to login to the application
 
     $ php artisan db:seed
 
-Publish all the livewire assets
+On some servers the live wire assets need to be published
 
     $ php artisan livewire:publish
 
-Compile the CSS and JS files
+Compile the CSS and JS files for development
 
     $ npm run dev
 
 Start the local development server
 
     $ php artisan serve
+
+For production, run the following command to minify the CSS and JS files
+
+    $ npm run prod
 
 You can now access the server at http://localhost:8000
 
