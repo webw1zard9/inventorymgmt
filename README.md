@@ -12,7 +12,20 @@ Password: admin
 
 ## Installation
 
-Install Composer dependencies
+Create your .env file
+
+    $ mv .env.example .env
+
+Create an empty database for our application. In the .env file, add database information to allow Laravel to connect to the database
+
+    DB_CONNECTION=mysql
+    DB_HOST=127.0.0.1
+    DB_PORT=3306
+    DB_DATABASE=
+    DB_USERNAME=
+    DB_PASSWORD=
+
+Install Composer dependencies. The database will be migrated after dependencies are installed. 
 
     $ composer install 
 
@@ -20,22 +33,13 @@ Install Node dependencies
 
     $ npm install
 
-Create a copy of your .env file
+On some VPS/Cloud servers the `storage` folder may not be writable. To fix this issue, run the following command:
 
-    $ cp .env.example .env
+    $ chmod -R 775 ./storage
 
 Generate an app encryption key
 
     $ php artisan key:generate
-
-Create an empty database for our application. In the .env file, add database information to allow Laravel to connect to the database
-
-    DB_CONNECTION=mysql
-    DB_HOST=
-    DB_PORT=
-    DB_DATABASE=
-    DB_USERNAME=
-    DB_PASSWORD=
 
 Migrate the database
 
@@ -45,7 +49,11 @@ Migrate the database
 
     $ php artisan db:seed
 
-Complie the CSS and JS files
+Publish all the livewire assets
+
+    $ php artisan livewire:publish
+
+Compile the CSS and JS files
 
     $ npm run dev
 
