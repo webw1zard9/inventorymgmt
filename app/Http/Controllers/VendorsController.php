@@ -135,7 +135,7 @@ class VendorsController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        $all_po_and_txns = $vendor->purchase_orders->merge($vendor_transactions)->sortBy('created_at');
+        $all_po_and_txns = $vendor->purchase_orders->concat($vendor_transactions)->sortBy('created_at');
 
         $pdf=0;
         $view_vars = compact(
