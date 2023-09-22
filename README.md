@@ -22,7 +22,7 @@ Install Node dependencies
 
 Create a copy of your .env file
 
-    $ cp example.env .env
+    $ cp .env.example .env
 
 Generate an app encryption key
 
