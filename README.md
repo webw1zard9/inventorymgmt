@@ -87,4 +87,4 @@ The login page can be accessed at http://localhost:8000/login. The default login
 
 ## <a name="license"></a>License
 
-Free software distributed under the terms of the MIT license.
+Free software distributed under the terms of the [MIT license](./MIT-LICENSE.txt).
