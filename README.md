@@ -3,11 +3,11 @@
 
 ## Overview
 
-This is a simple inventory management system that allows users to add, edit, and delete items from a database. The system also allows users to search for items by name, category, or price. The system is built using Python and Flask, and uses a SQLite database to store the data. The system is deployed on Heroku and can be accessed [here](https://inventory-management-system-1.herokuapp.com/).
+This is a simple inventory management system that allows users to add, edit, and delete items. It manages purchasing and sales, inventory controls between multiple locations is necessary. There is an accounting module that tracks consignment products, payables and P&L.
 
 Demo site: https://inventorymgmt.net/
 
-Login: admin
+Login: admin@test.com
 Password: admin
 
 ## Installation
