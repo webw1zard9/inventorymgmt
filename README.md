@@ -33,7 +33,7 @@ You can also set 'Product Types' and 'Product Unit of Measure'
 
 Install Composer dependencies. The database will be migrated after dependencies are installed. 
 
-    composer install 
+    $ composer install 
 
 Generate an app encryption key
 
