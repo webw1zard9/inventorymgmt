@@ -16,10 +16,6 @@ Create your .env file
 
     $ mv .env.example .env
 
-Generate an app encryption key
-
-    $ php artisan key:generate
-
 Create an empty database for your application. In the .env file, add database information to allow Laravel to connect to the database
 
     DB_CONNECTION=mysql
@@ -38,6 +34,10 @@ You can also set 'Product Types' and 'Product Unit of Measure'
 Install Composer dependencies. The database will be migrated after dependencies are installed. 
 
     $ composer install 
+
+Generate an app encryption key
+
+    $ php artisan key:generate
 
 On some VPS/Cloud servers the `storage` folder may not be writable. If you experience issues, create the necessary folders and assign the correct permissions:
 
