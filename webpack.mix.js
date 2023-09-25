@@ -1,7 +1,5 @@
 const mix = require('laravel-mix');
 
-require('mix-env-file');
-
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -21,7 +19,6 @@ mix.js('resources/assets/js/app.js', 'public/js/app.js')
     .sass('resources/assets/scss/app.scss', 'public/css')
     .vue();
 
-mix.env(process.env.ENV_FILE);
 
 if (mix.inProduction()) {
     console.log('In Production - Versioning Files');
