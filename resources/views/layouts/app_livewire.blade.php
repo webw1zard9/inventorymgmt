@@ -37,6 +37,11 @@
 
 <body class="fixed-left">
 
+<div id="vue_app">
+    <auto-logout />
+</div>
+
+
 <div id="app">
 
     <!-- Begin page -->

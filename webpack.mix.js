@@ -1,5 +1,7 @@
 const mix = require('laravel-mix');
 
+require('mix-env-file');
+
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -16,10 +18,12 @@ mix.js('resources/assets/js/app.js', 'public/js/app.js')
     // .extract(['vue','lodash','axios'], 'public/js/vendor.js')
     .copy('node_modules/jquery-typeahead/dist/jquery.typeahead.min.css', 'public/css')
     .copy('node_modules/chart.js/dist/chart.min.js', 'public/js/plugins')
-    .sass('resources/assets/scss/app.scss', 'public/css');
+    .sass('resources/assets/scss/app.scss', 'public/css')
+    .vue();
+
+mix.env(process.env.ENV_FILE);
 
 if (mix.inProduction()) {
     console.log('In Production - Versioning Files');
     mix.version();
 }
-

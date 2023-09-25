@@ -9,6 +9,16 @@ require('./bootstrap');
 
 import typeahead from "jquery-typeahead";
 
+import { createApp } from 'vue';
+import AutoLogout from './components/AutoLogout.vue';
+
+const app = createApp({
+    components: {
+        AutoLogout
+    }
+});
+
+app.mount('#vue_app');
 
 $.typeahead({
     input: '.js-typeahead-po-batches',
