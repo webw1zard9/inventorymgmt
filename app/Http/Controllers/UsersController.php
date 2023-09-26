@@ -385,7 +385,6 @@ class UsersController extends Controller
         Auth::logout();
         Session::flush();
         Auth::login($user);
-
         return redirect('/');
     }
 

@@ -354,14 +354,12 @@
                             <button wire:click="readyToDeliver" type="submit" class="btn btn-primary waves-effect waves-light pull-right ml-2">Ready For Delivery <i class=" mdi mdi-arrow-right-bold"></i> </button>
                         @endif
 
-                        @level(50)
                         @if($saleOrder->isReadyForDelivery())
                             {{ Form::open(['url'=>route('sale-orders.deliver-order', ['sale_order'=>$saleOrder->id])]) }}
                             {{ method_field('PUT') }}
                             <button type="submit" class="btn btn-success waves-effect waves-light pull-right ml-2"{{ (!$saleOrder->canDeliverOrder()?"disabled":"") }}>Deliver Order <i class=" mdi mdi-arrow-right-bold"></i></button>
                             {{ Form::close() }}
                         @endif
-                        @endlevel
 
                         @if($saleOrder->canReverse())
                             <button wire:click="reverse" type="submit" class="btn btn-secondary waves-effect waves-light pull-right"><i class=" mdi mdi-arrow-left-bold"></i> Reverse</button>

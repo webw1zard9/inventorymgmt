@@ -652,12 +652,12 @@ class SaleOrder extends Order
 
     public function canDeliverOrder()
     {
-        return $this->isReadyForDelivery() && $this->balance <= 0 && ! $this->requires_manager_approval && Auth::user()->level() >= 60;
+        return Auth::user()->can('so.deliver_order') && $this->isReadyForDelivery() && $this->balance <= 0 && ! $this->requires_manager_approval;
     }
 
     public function canAddItems()
     {
-        return (Auth::user()->level() >= 50 && !$this->isReadyForDelivery() && !$this->isDelivered()) && !$this->trashed() && !$this->location->trashed();
+        return (Auth::user()->can('batches.sell') && !$this->isReadyForDelivery() && !$this->isDelivered()) && !$this->trashed() && !$this->location->trashed();
     }
 
     public function canReverse()
