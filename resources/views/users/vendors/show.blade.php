@@ -245,7 +245,7 @@
                                 {{--                                    {{ dump($transaction) }}--}}
                                 <tr>
                                     <td>{{ $transaction->id }}</td>
-                                    <td>{{ $transaction->created_at->format(config('inventorymgmt.date_format')) }}</td>
+                                    <td>{{ $transaction->txn_date->format(config('inventorymgmt.date_format')) }}</td>
                                     <td>{{ ($transaction->location?$transaction->location->name:"--") }}</td>
                                     <td>
                                         @if($transaction->amount < 0)

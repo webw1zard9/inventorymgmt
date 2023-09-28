@@ -71,7 +71,8 @@ class VendorsController extends Controller
         $pending_order_cost = (new SaleOrder())->pendingOrdersForVendorBatches($vendor->id)->get()->sum('cost_sold');
 
         $vendor_transactions = OrderTransaction::where('vendor_id', $vendor->id)
-            ->orderBy('created_at', 'desc')
+            ->orderBy('txn_date', 'desc')
+            ->orderBy('id', 'desc')
             ->with([
                 'location',
                 'user',
