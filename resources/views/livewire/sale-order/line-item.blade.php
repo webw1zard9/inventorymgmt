@@ -117,7 +117,7 @@
     @endif
 
     @if($order_detail->sale_order->canAddItems())
-        <td style="text-align: center">
+        <td style="text-align: right">
             <button wire:click="removeItem" wire:loading.attr="disabled" type="submit" class="btn btn-danger waves-effect waves-light" ><i class=" mdi mdi-delete-forever"></i></button>
             <br>
             <div wire:loading wire:target="removeItem" wire:loading.class="d-flex justify-content-center" class="mt-1">

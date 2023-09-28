@@ -431,7 +431,7 @@
                             @endif
 
                             @if($saleOrder->canAddItems())
-                                <th>
+                                <th style="text-align: right">
                                     {{ Form::open(['url'=>'#', 'wire:submit.prevent="removeAllItems"', ]) }}
                                     {{ method_field('POST') }}
                                     <button wire:loading.attr="disabled" type="submit" class="btn btn-danger waves-effect waves-light" ><i class=" mdi mdi-delete-forever"></i> All</button>

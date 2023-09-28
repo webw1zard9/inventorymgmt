@@ -19,7 +19,7 @@
                 <a href="{{ route('batches.create') }}" class="pull-left btn btn-primary mb-2">Create Batch</a>
             @endif
 
-                <a href="javascript:void(0)" class="btn btn-primary pull-right" data-toggle="modal" data-target="#sale_order_filters">Filters {{ (count($filters)?"(".count($filters).")":"") }} <i class="mdi mdi-filter"></i></a>
+                <a href="javascript:void(0)" class="btn btn-primary pull-right mb-2" data-toggle="modal" data-target="#sale_order_filters">Filters {{ (count($filters)?"(".count($filters).")":"") }} <i class="mdi mdi-filter"></i></a>
 
                 <div id="sale_order_filters" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true"  style="display: none;">
                     <div class="modal-dialog modal-lg" style="max-width: 80% !important;">
@@ -196,6 +196,7 @@
     <div class="row">
         <div class="col-lg-12">
 
+{{--            {{ dd($batches) }}--}}
 
             <div class="card-box clearfix">
 
@@ -241,20 +242,23 @@
 
                                         <thead>
                                         <tr>
+                                            @unlessrole('salesrep')
                                             <th>PO Date</th>
+                                            @endrole
+
                                             <th>SKU</th>
                                             <th>Category</th>
                                             <th>Batch Name</th>
                                             <th style="white-space: nowrap">Location Batch Name</th>
 
-                                            @level(60)
+                                            @unlessrole('salesrep')
                                                 <th>Purchased</th>
                                                 <th style="white-space: nowrap">Available <i class="ion-help-circled" data-toggle="tooltip" data-placement="top" title="" data-original-title="Quantity available for sale"></i></th>
                                                 <th style="white-space: nowrap">Pending <i class="ion-help-circled" data-toggle="tooltip" data-placement="top" title="" data-original-title="Quantity on hold and ready-to-pack that have not been fulfilled"></i></th>
                                                 <th>Total <span style="white-space: nowrap">Inventory <i class="ion-help-circled" data-toggle="tooltip" data-placement="top" title="" data-original-title="Total inventory on-hand. Available + Pending"></i></span></th>
                                             @else
                                                 <th>Inventory</th>
-                                            @endlevel
+                                            @endrole
 
                                             @can('batches.show.vendor')
                                                 <th>Vendor</th>
@@ -275,12 +279,14 @@
                                         @foreach($batch_items as $batch)
 
                                             <tr>
-                                                {{--<td>{{ $batch->id }}</td>--}}
+                                                @unlessrole('salesrep')
                                                 <td>
                                                     @if($batch->purchase_order)
                                                         {{ $batch->purchase_order->txn_date->format(config('inventorymgmt.date_format')) }}
                                                     @endif
                                                 </td>
+                                                @endrole
+
                                                 <td class="hidden-print">
                                                     <a href="{{ route('batches.show', $batch->id) }}">{{ $batch->ref_number }}</a>
                                                 </td>
@@ -300,7 +306,7 @@
                                                     </a>
                                                 </td>
 
-                                                @level(60)
+                                                @unlessrole('salesrep')
                                                     <td data-sort="{{ $batch->units_purchased }}">
                                                         @if($batch->track_inventory)
                                                             {!! display_inventory($batch, 'units_purchased') !!}
@@ -344,7 +350,7 @@
                                                             <i>Unlimited</i>
                                                         @endif
                                                     </td>
-                                                @endlevel
+                                                @endrole
 
                                                     @can('batches.show.vendor')
                                                         <td>
