@@ -64,8 +64,8 @@ class SaleOrdersController extends Controller
         }
 
         $customers = User::customers(1)->get();
-        $sales_reps = User::salesrep()->get(); //all sales reps used for filter
-        $active_sales_reps = User::salesrep(1)->get();
+        $sales_reps = User::salesrep()->orderBy('name')->get(); //all sales reps used for filter
+        $active_sales_reps = User::salesrep(1)->orderBy('name')->get();
 
         $order_discounts = SaleOrder::where('discount_approved', 0)->count();
         $order_lines_discounts = BatchLocation::needApproval()->count();
