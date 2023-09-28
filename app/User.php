@@ -471,7 +471,7 @@ class User extends Authenticatable
     public function scopeSalesrep($query)
     {
 
-        $query->where('users.active',1)->whereHas('roles', function ($q) {
+        $query->whereHas('roles', function ($q) {
             $q->where('name', 'salesrep');
         });
 

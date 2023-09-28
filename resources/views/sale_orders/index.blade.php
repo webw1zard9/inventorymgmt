@@ -111,18 +111,16 @@
                                 </div>
 
                                 @level(60)
-                                {{--<div class="row form-group">--}}
                                     <div class="col-lg-6 form-group">
                                         <select id="sales_rep" name="filters[sales_rep]" class="form-control">
                                             <option value="">- Sales Rep -</option>
                                             <option value="None"{{ (isset($filters['sales_rep']) ? ("None" == $filters['sales_rep'] ? 'selected' : '' ) : '') }}>None</option>
                                             @foreach($sales_reps as $sales_rep)
-                                                <option value="{{ $sales_rep->id }}"{{ (isset($filters['sales_rep']) ? ($sales_rep->id == $filters['sales_rep'] ? 'selected' : '' ) : '') }}>{{$sales_rep->name}}</option>
+                                                <option value="{{ $sales_rep->id }}"{{ (isset($filters['sales_rep']) ? ($sales_rep->id == $filters['sales_rep'] ? 'selected' : '' ) : '') }}>{{$sales_rep->name}}{{ ( $sales_rep->active ? "" : " (Inactive)") }}</option>
                                             @endforeach
                                         </select>
 
                                     </div>
-                                {{--</div>--}}
                                 @endlevel
 
                             </div>
