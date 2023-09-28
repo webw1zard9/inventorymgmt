@@ -63,9 +63,9 @@ class SaleOrdersController extends Controller
             $filter_customer = User::find($filters['customer']);
         }
 
-        $customers = User::customers()->get();
-        $sales_reps = User::salesrep()->get();
-//        $brokers = Broker::orderBy('name')->pluck('name','id');
+        $customers = User::customers(1)->get();
+        $sales_reps = User::salesrep()->get(); //all sales reps used for filter
+        $active_sales_reps = User::salesrep(1)->get();
 
         $order_discounts = SaleOrder::where('discount_approved', 0)->count();
         $order_lines_discounts = BatchLocation::needApproval()->count();
@@ -76,7 +76,7 @@ class SaleOrdersController extends Controller
             $warnings->push('Some orders need discount approvals. <a href="'.route('sale-orders.discount-approval').'">Click Here</a>');
         }
 
-        return view('sale_orders.index', compact('sale_orders', 'filters', 'customers', 'sales_reps', 'filter_customer', 'warnings'));
+        return view('sale_orders.index', compact('sale_orders', 'filters', 'customers', 'sales_reps', 'active_sales_reps', 'filter_customer', 'warnings'));
     }
 
     public function show(SaleOrder $saleOrder)

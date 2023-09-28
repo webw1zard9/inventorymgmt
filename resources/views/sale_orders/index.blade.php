@@ -110,7 +110,7 @@
 
                                 </div>
 
-                                @level(60)
+                                @unlessrole('salesrep')
                                     <div class="col-lg-6 form-group">
                                         <select id="sales_rep" name="filters[sales_rep]" class="form-control">
                                             <option value="">- Sales Rep -</option>
@@ -121,7 +121,7 @@
                                         </select>
 
                                     </div>
-                                @endlevel
+                                @endrole()
 
                             </div>
 
@@ -234,21 +234,17 @@
                                             </div>
                                         @endif
 
-                                        @level(60)
-
+                                        @unlessrole('salesrep')
                                         <div class="form-group">
-
                                             <label class="control-label">Sales Rep <span class="text-danger">*</span></label>
                                             <select class="form-control mb-2" name="sales_rep_id" required="required">
                                                 <option value="">-- Sales Rep --</option>
-                                                @foreach($sales_reps as $sales_rep)
-                                                    <option value="{{ $sales_rep->id }}" @if ($sales_rep->id == 14) selected="selected" @endif>{{ $sales_rep->name }}</option>
+                                                @foreach($active_sales_reps as $active_sales_rep)
+                                                    <option value="{{ $active_sales_rep->id }}">{{ $active_sales_rep->name }}</option>
                                                 @endforeach
                                             </select>
-
                                         </div>
-
-                                        @endlevel
+                                        @endrole
 
                                     </div>
 
@@ -297,10 +293,10 @@
                             <td class="text-nowrap"><a href="{{ route('sale-orders.show', $sale_order) }}">{{ $sale_order->ref_number }}</a></td>
                             <td><span class="badge badge-{{ status_class($sale_order->status) }}">{{ ucwords($sale_order->status) }}</span>
                             </td>
-                            <td>{{ ucwords($sale_order->location->name) }}{!! ($sale_order->location->trashed()?" <span class='text-danger'>(deleted)</span>":"") !!}</td>
+                            <td>{{ ucwords($sale_order->location->name) }}{!! ($sale_order->location->trashed()?" <small class='text-danger'>(deleted)</small>":"") !!}</td>
                             <td><a href="{{ route('users.show', $sale_order->customer->id) }}">{{ $sale_order->customer->name  }}</a>
                             </td>
-                            <td>{{ ($sale_order->sales_rep?$sale_order->sales_rep->name:'--') }}</td>
+                            <td>{{ ($sale_order->sales_rep?$sale_order->sales_rep->name:'--') }}{!! ($sale_order->sales_rep->active?"":" <small class='text-danger'>(Inactive)</span>") !!}</td>
                             <td>{{ (!empty($units_purchased[$sale_order->id]) ? implode(", ", $units_purchased[$sale_order->id]) : '--') }}</td>
                             <td>{{ display_currency($sale_order->total) }}</td>
                             <td>{{ display_currency($sale_order->balance) }}</td>

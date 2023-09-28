@@ -455,9 +455,12 @@ class User extends Authenticatable
         return $q_builder;
     }
 
-    public function scopeCustomers($query)
+    public function scopeCustomers($query, $active=null)
     {
-        $query->where('users.active',1)->whereHas('roles', function ($q) {
+        if($active===1) $query->where('users.active',1);
+        elseif($active===0) $query->where('users.active',0);
+
+        $query->whereHas('roles', function ($q) {
             $q->where('name', 'customer');
         });
 
@@ -468,8 +471,10 @@ class User extends Authenticatable
         return $query;
     }
 
-    public function scopeSalesrep($query)
+    public function scopeSalesrep($query, $active=null)
     {
+        if($active===1) $query->where('users.active',1);
+        elseif($active===0) $query->where('users.active',0);
 
         $query->whereHas('roles', function ($q) {
             $q->where('name', 'salesrep');
