@@ -1,3 +1,4 @@
+@php use Illuminate\Support\Facades\Auth; @endphp
 @extends('layouts.app')
 
 
@@ -60,21 +61,21 @@
                                 <td>
 
                                     @if($user->can_edit_super_user)
-                                        @anygate('users.edit', 'users.edit.customer')
+                                        @if(Auth::user()->can('users.edit') || Auth::user()->can('users.edit.customer'))
                                         <a href="{{ route('users.edit', ['user'=>$user->id]) }}" class="btn btn-secondary"><i class="ion-edit"></i></a>
-                                        @endanygate
+                                        @endif
                                     @endif
 
 
                                     @if(!$user->super_user)
 
-                                    @can('users.delete.customer')
-                                        <form action="{{ route('users.destroy', $user->id) }}" method="POST" style="display: inline-block;">
-                                            {{ method_field('DELETE') }}
-                                            {{ csrf_field() }}
-                                            <button type="submit" class="btn btn-danger waves-effect"><i class="ion-trash-a"></i></button>
-                                        </form>
-                                    @endcan
+                                        @can('users.delete.customer')
+                                            <form action="{{ route('users.destroy', $user->id) }}" method="POST" style="display: inline-block;">
+                                                {{ method_field('DELETE') }}
+                                                {{ csrf_field() }}
+                                                <button type="submit" class="btn btn-danger waves-effect"><i class="ion-trash-a"></i></button>
+                                            </form>
+                                        @endcan
 
                                     @endif
                                 </td>

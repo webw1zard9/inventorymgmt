@@ -1,3 +1,4 @@
+@php use Illuminate\Support\Facades\Auth; @endphp
 
 <div class="left side-menu">
     <div class="sidebar-inner slimscrollleft">

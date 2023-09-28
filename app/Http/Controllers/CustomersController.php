@@ -16,7 +16,6 @@ class CustomersController extends Controller
     {
         if (Gate::denies('users.index.customer')) {
             flash('Access Denied!')->error();
-
             return back();
         }
 
