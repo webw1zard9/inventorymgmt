@@ -126,9 +126,7 @@
 
                                     <dt class="col-5 text-right">Discount:</dt>
                                     <dd class="col-6">
-{{--                                        @if($saleOrder->discount || !$saleOrder->isDelivered())--}}
-
-                                        @if($saleOrder->canAddItems() && ($saleOrder->balance > 0 || $saleOrder->discount > 0))
+                                        @if($saleOrder->canAddItems())
                                         @level(50)
                                         <div>
                                         {{ Form::open(['url'=>'#', 'wire:submit.prevent="applyDiscount"']) }}
