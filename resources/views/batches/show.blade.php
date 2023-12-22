@@ -138,7 +138,6 @@
         </div>
     </div>
 
-    @level(60)
 
     @if($batch->allocated_inventory->count())
 
@@ -166,7 +165,9 @@
                                     <a class="ml-2 btn btn-primary pull-right" href="{{ route('batches.allocate', ['batch'=>$batch->id, 'location'=>$location_aggregate->id]) }}">Allocate <i class="mdi mdi-logout"></i> </a>
                                     @endif
 
+                                    @can('batches.edit')
                                     <a class="btn btn-secondary pull-right" href="{{ route('batch-location-aggregate.edit', $location_aggregate->batch_location_aggregate->id) }}"><i class="mdi mdi-lead-pencil"></i> Edit Allocation</a>
+                                    @endcan
 
                                 @endif
 
@@ -349,7 +350,6 @@
         </div>
     @endif
 
-    @endlevel
 
     @if($all_orders_by_status->count())
 
