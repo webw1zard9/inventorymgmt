@@ -55,7 +55,7 @@
 
                 <div class="col-xl-2 col-lg-3 col-md-4 col-6">
                     <div class="widget-simple text-center card-box">
-                        <h3 class="text-default counter font-bold mt-0">{{ $total_ready_to_pack }} {{ $batch->uom }}</h3>
+                            <h3 class="text-default counter font-bold mt-0">{{ $total_ready_to_pack }} {{ $batch->uom }}</h3>
                         <p class="text-muted mb-0">Ready To Pack</p>
                     </div>
                 </div>

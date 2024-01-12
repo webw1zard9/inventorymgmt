@@ -342,11 +342,11 @@
 
                     <div class="card-footer hidden-print">
 
-                        @level(50)
+                        @can('so.ready_to_pack')
                         @if($saleOrder->isReadyToBePack() && $saleOrder->order_details->count())
                             <button wire:click="readyToPack" type="submit" class="btn btn-primary waves-effect waves-light pull-right ">Ready To Pack <i class=" mdi mdi-arrow-right-bold"></i> </button>
                         @endif
-                        @endlevel
+                        @endcan
 
                         @if($saleOrder->isReadyToDeliver())
                             <button wire:click="readyToDeliver" type="submit" class="btn btn-primary waves-effect waves-light pull-right ml-2">Ready For Delivery <i class=" mdi mdi-arrow-right-bold"></i> </button>
