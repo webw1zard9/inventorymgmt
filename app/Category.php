@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Category extends Model
 {
@@ -19,6 +20,11 @@ class Category extends Model
     public function batches()
     {
         return $this->hasMany(Batch::class);
+    }
+
+    public function priceRanges()
+    {
+        return $this->hasMany(CategoryPriceRange::class);
     }
 
     public function canTransferTo()
@@ -67,4 +73,40 @@ class Category extends Model
             ->orderBy('products.count', 'desc')
             ->get();
     }
+
+    public function getPriceRanges()
+    {
+
+        return static::query()
+            ->select(
+                'categories.id',
+                'categories.name AS category_name',
+                'category_price_ranges.name AS price_range_name',
+                'locations.name AS location_name',
+                'category_price_ranges.min_price',
+                'category_price_ranges.max_price',
+                'batches.uom',
+                \DB::raw('COUNT(bla.batch_id) AS batches_count'),
+                \DB::raw('SUM(bla.onhand_inventory) AS inventory'),
+                \DB::raw('SUM(bla.onhand_cost)/100 AS inv_value')
+            )
+            ->join('category_price_ranges', 'categories.id', '=', 'category_price_ranges.category_id')
+            ->join('batches', 'categories.id', '=', 'batches.category_id')
+            ->leftJoin('batch_location_aggregate as bla', function ($join) {
+                $join->on('bla.batch_id', '=', 'batches.id')
+                    ->where('bla.suggested_unit_sale_price', '>=', DB::raw('`category_price_ranges`.`min_price`'))
+                    ->where(function ($query) {
+                        $query->where('bla.suggested_unit_sale_price', '<=', DB::raw('`category_price_ranges`.`max_price`'))
+                            ->orWhereNull('category_price_ranges.max_price');
+                    });
+            })
+            ->join('locations', 'bla.location_id', '=', 'locations.id')
+            ->where('bla.onhand_inventory', '>', 0)
+            ->groupBy('categories.id', 'category_price_ranges.id', 'bla.location_id', 'batches.uom')
+            ->orderBy('categories.id')
+            ->orderBy('category_price_ranges.min_price')
+            ->get();
+
+    }
+
 }

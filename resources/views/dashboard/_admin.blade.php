@@ -105,6 +105,9 @@
 
 @permission('dashboard.inventory_location')
 @include('dashboard.partials._inventory_location')
+
+@include('dashboard.partials._inventory_price_range')
+
 @endpermission
 
 @permission('dashboard.inventory_vendor')

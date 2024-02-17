@@ -214,7 +214,11 @@ class HomeController extends Controller
         if (Auth::user()->hasPermission('dashboard.inventory_location')) {
 //            $category_location_inventory = Batch::InventoryByCategoryLocation()->get();
             $category_location_inventory = Batch::currentInventory(null, ['category'])->get();
+
+            $category_price_ranges = (new Category())->getPriceRanges()->groupBy('location_name');
+
             $view->with('category_location_inventory', $category_location_inventory);
+            $view->with('category_price_ranges', $category_price_ranges);
         }
 
         if (Auth::user()->hasPermission('dashboard.inventory_vendor')) {

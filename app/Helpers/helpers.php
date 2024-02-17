@@ -41,6 +41,23 @@ if (! function_exists('display_fulfillment_status')) {
     }
 }
 
+
+if (! function_exists('display_category_price_ranges')) {
+    function display_category_price_ranges($min, $max)
+    {
+        $str = "";
+
+        if($min == 0 || is_null($min)) $str = "Under ";
+        $str .= ($min > 0 ? display_currency($min)  : null);
+
+        if($min > 0 && !is_null($max)) $str .= " - ";
+        $str .= ($max > 0 ? display_currency($max) : " +");
+
+        return $str;
+    }
+
+}
+
 if (! function_exists('date_presets')) {
     function date_presets()
     {
