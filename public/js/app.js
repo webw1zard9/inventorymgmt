@@ -19330,11 +19330,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   props: {
     warningTime: {
       type: Number,
-      "default": 60 * 15 * 1000
+      "default": 60 * 30 * 1000
     },
     logoutTime: {
       type: Number,
-      "default": 60 * 16 * 1000
+      "default": 60 * 32 * 1000
     },
     data: {
       type: Array,
