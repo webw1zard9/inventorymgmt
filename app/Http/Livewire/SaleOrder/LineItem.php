@@ -248,7 +248,7 @@ class LineItem extends Component
 
             session()->flash('od-success', '');
 
-            $this->emitUp('orderDetailUpdated');
+            $this->dispatch('orderDetailUpdated');
 //            $this->emit('refresh-add-batch-item');
 
         } catch (QueryException $e) {
@@ -347,7 +347,7 @@ class LineItem extends Component
 
             DB::commit();
 
-            $this->emitUp('orderDetailUpdated');
+            $this->dispatch('orderDetailUpdated');
 
         } catch (\Exception $e) {
             DB::rollBack();

@@ -62,7 +62,7 @@
                     $('#search_keywords').empty();
                     $('.bootstrap-tagsinput').find('.tag').remove();
 
-                    Livewire.emit('addItemModalClosed');
+                    Livewire.dispatch('addItemModalClosed');
                 })
 
             });

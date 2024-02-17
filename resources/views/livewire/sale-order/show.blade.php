@@ -405,7 +405,7 @@
                         @if(!$addItemButtonDisabled)
                         @level(50)
                         <div>
-                        <button {{ $addItemButtonDisabled }} wire:click="$emitTo('sale-order.add-item', 'loadBatches')" type="submit" class="btn btn-lg btn-primary pull-right" data-toggle="modal" data-target=".add-items">Add Items</button>
+                        <button {{ $addItemButtonDisabled }} wire:click="$dispatchTo('sale-order.add-item', 'loadBatches')" type="submit" class="btn btn-lg btn-primary pull-right" data-toggle="modal" data-target=".add-items">Add Items</button>
                         </div>
                         @endlevel
                         @endif
