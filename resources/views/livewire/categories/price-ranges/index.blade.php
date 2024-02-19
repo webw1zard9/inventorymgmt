@@ -8,22 +8,26 @@
 
                 <h1><small>Category:</small> {{ $category->name }}</h1>
 
-                <h4>Add:</h4>
+                <h4>Create</h4>
                     @livewire('categories.price-ranges.item', [
                                 'category' => $category,
                                 'category_price_range' => new CategoryPriceRange()
                             ], key('new-item'))
+
+                @if($category->price_ranges->count())
                 <hr />
 
-                <h4>Existing:</h4>
-                    @foreach($category->price_ranges as $category_price_range)
+                <h4>Existing</h4>
+                @foreach($category->price_ranges as $category_price_range)
 
-                        @livewire('categories.price-ranges.item', [
-                            'category' => $category,
-                            'category_price_range' => $category_price_range
-                        ], key($category_price_range->id))
+                    @livewire('categories.price-ranges.item', [
+                        'category' => $category,
+                        'category_price_range' => $category_price_range
+                    ], key($category_price_range->id))
 
-                    @endforeach
+                @endforeach
+                @endif
+
             </div>
 
         </div>
