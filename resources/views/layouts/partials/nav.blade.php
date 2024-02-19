@@ -133,7 +133,7 @@
 
                         @can('categories.index')
                             <li>
-                                <a href="{{ route('categories.index') }}" class=" {{ Request::is('categories*') ? 'active' : '' }}"><i
+                                <a href="{{ route('categories.index') }}" class=" {{ Request::is('settings/categories*') ? 'active' : '' }}"><i
                                             class=" ion-folder"></i><span> Categories </span></a>
                             </li>
                         @endcan

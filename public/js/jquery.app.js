@@ -296,13 +296,15 @@ function toggle_slimscroll(item){
 
 // === following js will activate the menu in left side bar based on url ====
 $(document).ready(function() {
-    $("#sidebar-menu a").each(function() {
-        if (this.href == window.location.href) {
-            $(this).addClass("active");
-            $(this).parent().addClass("active"); // add active to li of the current link
-            $(this).parent().parent().prev().addClass("active"); // add active class to an anchor
-            $(this).parent().parent().prev().click(); // click the item to make it drop
+    $("#sidebar-menu a").each(function(idx) {
+        
+        if ((idx == 0 && window.location.pathname == "/") || (idx != 0 && window.location.href.startsWith(this.href))) {
+            $(this).addClass("active")
+                .parent().addClass("active") // Add active to <li> of the current link
+                .parent().prev().addClass("active") // Add active class to an anchor
+                .click(); // Click the item to make it drop
         }
+        
     });
 });
 

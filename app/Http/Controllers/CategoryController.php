@@ -24,7 +24,9 @@ class CategoryController extends Controller
 
         view()->share('title', 'Settings / Categories');
 
-        $categories = Category::orderBy('name')->with('batches')->get();
+        $categories = Category::withMinMaxAvgBatchSalePrice()->with('price_ranges')->orderBy('categories.name')->with('batches')->get();
+
+//        dd($categories);
 
         return view('categories.index', compact('categories'));
     }

@@ -355,9 +355,4 @@ class LineItem extends Component
         }
     }
 
-    protected function setAvailableInventory()
-    {
-
-    }
-
 }

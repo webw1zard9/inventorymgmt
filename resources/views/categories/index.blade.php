@@ -19,38 +19,81 @@
 
                         <thead>
                             <tr>
+                                <th style="width: 45px">Active</th>
                                 <th>Name</th>
-                                <th style="width: 10%">Active</th>
+                                <th>Min Sale Price</th>
+                                <th>Max Sale Price</th>
+                                <th>Avg Sale Price</th>
+                                <th>Qty</th>
+                                <th>Price Ranges</th>
                                 <th style="width: 10%; white-space: nowrap"></th>
                             </tr>
                         </thead>
 
                         <tbody>
 
-                            @foreach($categories as $category)
+                            @foreach($categories->groupBy('name') as $category_name=>$grouped_category)
                                 <tr>
-                                    <td>
-                                        {{ $category->name }}
-                                    </td>
-                                    <td>
-                                        @if($category->is_active)
+                                    <td class="text-center">
+                                        @if($grouped_category->first()->is_active)
                                             <i class="mdi mdi-check text-success font-16"></i>
-                                            @else
+                                        @else
                                             <i class=" mdi mdi-window-close text-danger font-16"></i>
                                         @endif
+                                    </td>
+                                    <td>{{ $category_name }}</td>
+                                    <td>
+                                        @foreach($grouped_category as $category)
+                                            <small>{{ $category->batch_uom }}:</small> {{ display_currency($category->batch_min_price) }}<br />
+                                        @endforeach
+                                    </td>
+
+                                    <td>
+                                        @foreach($grouped_category as $category)
+                                            <small>{{ $category->batch_uom }}:</small> {{ display_currency($category->batch_max_price) }}<br />
+                                        @endforeach
+                                    </td>
+
+                                    <td>
+                                        @foreach($grouped_category as $category)
+                                            @if($grouped_category->count()>1)
+                                                {{ $category->batch_uom }}:
+                                            @endif
+                                            {{ display_currency($category->batch_avg_price) }}<br />
+
+                                        @endforeach
+                                    </td>
+
+                                    <td>
+                                        @foreach($grouped_category as $category)
+                                            {{ number_format($category->batch_inventory) }} {{ $category->batch_uom }}<br />
+                                        @endforeach
 
                                     </td>
+                                    <td>
+                                        <a href="{{ route('categories.category-price-ranges.index', $grouped_category->first()) }}" class="btn btn-secondary btn mr-2">
+                                            @if($grouped_category->first()->price_ranges->count())
+                                                Edit
+                                                <span class="badge badge-primary ml-1">{{ $grouped_category->first()->price_ranges->count() }}</span>
+                                            @else
+                                                Add
+                                            @endif
+                                        </a>
+                                    </td>
                                     <td style="text-align: right;">
+                                        <div class="d-flex justify-content-end">
 
-                                        <form action="{{ route('categories.destroy', $category->id) }}" method="POST">
-                                            <a href="{{ route('categories.edit', $category) }}" class="btn btn-secondary btn"><i class="ion-edit"></i></a>
+                                        <a href="{{ route('categories.edit', $grouped_category->first()) }}" class="btn btn-secondary btn mr-2"><i class="ion-edit"></i></a>
+
+                                        <form action="{{ route('categories.destroy', $grouped_category->first()->id) }}" method="POST" class="d-inline">
+
                                             {{ method_field('DELETE') }}
                                             {{ csrf_field() }}
 
-                                            <button type="submit" class="btn btn-danger" {{ ( $category->batches->count()?"disabled='disabled'":"") }}><i class="ion-trash-a"></i></button>
+                                            <button type="submit" class="btn btn-danger" {{ ( $grouped_category->first()->batches->count()?"disabled='disabled'":"") }}><i class="ion-trash-a"></i></button>
 
                                         </form>
-
+                                        </div>
                                     </td>
 
                                 </tr>
@@ -84,11 +127,11 @@
 
     <script src="{{ asset('plugins/datatables/dataTables.buttons.min.js') }}"></script>
     <script src="{{ asset('plugins/datatables/buttons.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('plugins/datatables/jszip.min.js') }}"></script>
-    <script src="{{ asset('plugins/datatables/pdfmake.min.js') }}"></script>
-    <script src="{{ asset('plugins/datatables/vfs_fonts.js') }}"></script>
-    <script src="{{ asset('plugins/datatables/buttons.html5.min.js') }}"></script>
-    <script src="{{ asset('plugins/datatables/buttons.print.min.js') }}"></script>
+{{--    <script src="{{ asset('plugins/datatables/jszip.min.js') }}"></script>--}}
+{{--    <script src="{{ asset('plugins/datatables/pdfmake.min.js') }}"></script>--}}
+{{--    <script src="{{ asset('plugins/datatables/vfs_fonts.js') }}"></script>--}}
+{{--    <script src="{{ asset('plugins/datatables/buttons.html5.min.js') }}"></script>--}}
+{{--    <script src="{{ asset('plugins/datatables/buttons.print.min.js') }}"></script>--}}
     <script src="{{ asset('plugins/datatables/buttons.colVis.min.js') }}"></script>
 
     <script src="{{ asset('plugins/moment/min/moment.min.js') }}"></script>
@@ -102,8 +145,15 @@
             var table = $('#categories-datatable').DataTable({
                 lengthChange: true,
                 paging: true,
-                "order": [[ 0, "asc" ]],
+                "order": [[ 1, "asc" ]],
                 "displayLength": 100,
+                "autoWidth": true,
+                "columnDefs": [
+                    // { "orderable": false, "targets": 0 },
+                    // { "orderable": false, "targets": 7 },
+                    // { "orderable": false, "targets": 8 }
+
+                ],
                 buttons: ['excel', 'pdf', 'colvis']
             });
 

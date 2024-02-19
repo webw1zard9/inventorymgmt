@@ -64,7 +64,6 @@ onMounted(() => {
     window.addEventListener(event, resetTimer);
   });
   startTimer();
-  console.log("start timer");
 });
 
 onBeforeUnmount(() => {

@@ -18,6 +18,7 @@ use App\Http\Controllers\BatchLocationAggregateController;
 use App\Http\Controllers\BatchLocationController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CategoryPriceRangeController;
 use App\Http\Controllers\CoingateController;
 use App\Http\Controllers\CustomersController;
 use App\Http\Controllers\DashboardController;
@@ -105,6 +106,9 @@ Route::middleware('auth', 'web')->group(function () {
 
         Route::resource('brands', BrandController::class);
         Route::resource('categories', CategoryController::class);
+
+        Route::resource('categories.category-price-ranges', CategoryPriceRangeController::class)->scoped();
+
         Route::resource('roles', RoleController::class);
 
         Route::resource('permissions', PermissionController::class)->middleware(IsSuperAdmin::class);
@@ -211,15 +215,13 @@ Route::middleware('auth', 'web')->group(function () {
     Route::put('/order-details/{order_detail}', [OrderDetailsController::class, 'update'])->name('order-details.update');
     Route::put('/order-details/{order_detail}/retag', [OrderDetailsController::class, 'retag'])->name('order-details.retag');
 
-    Route::get('/products', [ProductsController::class, 'index'])->name('products.index');
-    Route::get('/products/{product}', [ProductsController::class, 'show'])->name('products.show');
-    Route::post('/products/{product}/pickup', [ProductsController::class, 'pickup'])->name('products.pickup');
-    Route::post('/products/{product}/approve-return', [ProductsController::class, 'approveReturn'])->name('products.approve-return');
-    Route::get('/products/{product}/pickup-success', [ProductsController::class, 'pickupSuccess'])->name('products.pickup-success');
-
-    Route::post('/products/{product}/sell-return', [ProductsController::class, 'sellReturn'])->name('products.sell_return');
-
-    Route::get('/products/{product}/activity', [ProductsController::class, 'activity'])->name('products.activity');
+//    Route::get('/products', [ProductsController::class, 'index'])->name('products.index');
+//    Route::get('/products/{product}', [ProductsController::class, 'show'])->name('products.show');
+//    Route::post('/products/{product}/pickup', [ProductsController::class, 'pickup'])->name('products.pickup');
+//    Route::post('/products/{product}/approve-return', [ProductsController::class, 'approveReturn'])->name('products.approve-return');
+//    Route::get('/products/{product}/pickup-success', [ProductsController::class, 'pickupSuccess'])->name('products.pickup-success');
+//    Route::post('/products/{product}/sell-return', [ProductsController::class, 'sellReturn'])->name('products.sell_return');
+//    Route::get('/products/{product}/activity', [ProductsController::class, 'activity'])->name('products.activity');
 
     Route::get('/batches', [BatchesController::class, 'index'])->name('batches.index');
     Route::get('/batches/create', [BatchesController::class, 'create'])->name('batches.create');
