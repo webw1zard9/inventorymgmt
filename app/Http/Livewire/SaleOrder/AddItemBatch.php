@@ -130,18 +130,17 @@ class AddItemBatch extends Component
             debug('has relation');
             $batch_location_inventory = $this->batch->getLocationInventoryValues($this->sale_order->location_id);
 
-            $this->sold_as_name = $batch_location_inventory->location_batch_name;
+            $this->sold_as_name = $batch_location_inventory->location_batch_name.($this->batch->type?" (".$this->batch->type.")":"");
             $this->price = display_currency_no_sign($batch_location_inventory->suggested_unit_sale_price);
             $this->available_qty = $batch_location_inventory->available_inventory;
             $this->unit_cost = $batch_location_inventory->location_unit_price?:$this->batch->unit_price;
         } else {
 
-            $this->sold_as_name = $this->batch->location_batch_name;
+            $this->sold_as_name = $this->batch->location_batch_name.($this->batch->type?" (".$this->batch->type.")":"");
             $this->price = display_currency_no_sign($this->batch->suggested_unit_sale_price);
             $this->available_qty = $this->batch->available_inventory;
             $this->unit_cost = $this->batch->location_unit_price?:$this->batch->unit_price;
         }
-
     }
 
 }
