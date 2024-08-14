@@ -202,13 +202,14 @@
 
                             <div class="pull-right">
 
-{{--                                @if(Auth::user()->isSuperAdmin())--}}
-{{--                                    <a href="{{ route('sale-orders.refresh-balance', $saleOrder) }}">Refresh Balance</a>--}}
-{{--                                @endif--}}
-
                                 <h4 class="text-right m-t-0 m-b-20 header-title">Balance Due</h4>
 
                                 <h1 class="text-right">{{ display_currency($saleOrder->balance) }}</h1>
+
+                                @if(Auth::user()->isSuperAdmin())
+                                    <a class="btn btn-default"
+                                            href="{{ route('sale-orders.refresh-balance', $saleOrder) }}">Refresh Balance</a>
+                                @endif
 
                                 @if(!$saleOrder->isDelivered() && !$saleOrder->trashed() && !$saleOrder->location->trashed())
 
