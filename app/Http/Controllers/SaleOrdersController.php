@@ -940,6 +940,7 @@ class SaleOrdersController extends Controller
                     $transaction_group->commit();
 
                     $txn = $saleOrder->journal->debit($payment_cents);
+
                     $txn->refresh();
 
                     $saleOrder->customer->journal->resetCurrentBalances();

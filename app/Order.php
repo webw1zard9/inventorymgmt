@@ -282,13 +282,13 @@ class Order extends Model
         $txn->ref_number = $ref_number;
         $txn->memo = $memo;
         $txn->acct_journal_txn_fid = $txn_id;
+        $txn->location_id = $location_id;
 
-        if ($location_id) {
-            $txn->location_id = $location_id;
-        } else {
-            $txn->location_id = Auth::user()->current_location->id;
-        }
-
+//        if ($location_id) {
+//            $txn->location_id = $location_id;
+//        } else {
+//            $txn->location_id = Auth::user()->current_location->id === 0 ? null : Auth::user()->current_location->id;
+//        }
 //        $this->balance = bcsub($this->balance, $txn->amount, 2);
 
         $this->transactions()->save($txn);
