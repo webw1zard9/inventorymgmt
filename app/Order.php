@@ -284,11 +284,11 @@ class Order extends Model
         $txn->acct_journal_txn_fid = $txn_id;
         $txn->location_id = $location_id;
 
-//        if ($location_id) {
-//            $txn->location_id = $location_id;
-//        } else {
-//            $txn->location_id = Auth::user()->current_location->id === 0 ? null : Auth::user()->current_location->id;
-//        }
+        if ($location_id) {
+            $txn->location_id = $location_id;
+        } else {
+            $txn->location_id = $this->location_id;
+        }
 //        $this->balance = bcsub($this->balance, $txn->amount, 2);
 
         $this->transactions()->save($txn);
