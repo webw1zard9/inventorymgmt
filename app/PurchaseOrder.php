@@ -130,7 +130,7 @@ class PurchaseOrder extends Order
         $this->total = $this->subtotal;
         $this->balance = $this->total - $this->transactions->sum('amount');
 
-        $amount_change = ($this->subtotal - $this->getOriginal('subtotal'));
+        $amount_change = (float) number_format($this->subtotal - $this->getOriginal('subtotal'), 2);
 
         if ($amount_change > 0) {
 

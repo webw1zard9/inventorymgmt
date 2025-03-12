@@ -659,6 +659,7 @@ class PurchaseOrdersController extends Controller
             DB::beginTransaction();
 
             $destination_location = Location::findOrFail($purchaseOrder->location_id);
+            $responseMessage = null;
 
             if ($path = $request->file('_packages')) { //process file
 
@@ -739,12 +740,9 @@ class PurchaseOrdersController extends Controller
                     Batch::createBatch($batch, $purchaseOrder->location_id);
 
                     $batch_added++;
-
                 }
 
-                if ($batch_added) {
-                    flash()->success("<strong>{$batch_added}</strong> items added successfully!");
-                }
+                $responseMessage = "<strong>$batch_added</strong> items added successfully!";
 
             } else {
 
@@ -754,16 +752,18 @@ class PurchaseOrdersController extends Controller
 
                 Batch::createBatch($batch, $purchaseOrder->location_id);
 
-                flash()->success($batch['name'].' added successfully!');
+                $responseMessage = "{$batch['name']} added successfully!";
             }
 
             $purchaseOrder->refresh();
             $purchaseOrder->updateTotals();
 
+            $responseMessage && flash()->success($responseMessage);
+
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-//            dd($e->getFile());
+
             flash()->error($e->getMessage());
 
             return redirect(route('purchase-orders.show', $purchaseOrder->id))

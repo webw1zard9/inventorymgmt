@@ -1,7 +1,6 @@
 
 @extends('layouts.app')
 
-
 @section('content')
 
     @if($purchaseOrder->trashed())
