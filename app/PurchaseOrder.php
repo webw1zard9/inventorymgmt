@@ -130,17 +130,17 @@ class PurchaseOrder extends Order
         $this->total = $this->subtotal;
         $this->balance = $this->total - $this->transactions->sum('amount');
 
-        $amount_change = (float) number_format($this->subtotal - $this->getOriginal('subtotal'), 2);
+        $amount_change = (int)bcmul(bcsub($this->subtotal, $this->getOriginal('subtotal'), 2), '100', 0);
 
         if ($amount_change > 0) {
 
-            $this->journal->credit($amount_change * 100);
-            $this->vendor->journal->credit($amount_change * 100);
+            $this->journal->credit($amount_change);
+            $this->vendor->journal->credit($amount_change);
 
         } elseif ($amount_change < 0) {
 
-            $this->journal->debit(abs($amount_change) * 100);
-            $this->vendor->journal->debit(abs($amount_change * 100));
+            $this->journal->debit(abs($amount_change));
+            $this->vendor->journal->debit(abs($amount_change));
 
         }
 
