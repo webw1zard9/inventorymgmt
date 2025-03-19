@@ -586,4 +586,9 @@ class VendorsController extends Controller
         ], compact( 'heading3', 'back_link'));
     }
 
+    public function refreshBalance(User $vendor)
+    {
+        $vendor->journal->resetCurrentBalances();
+        return back();
+    }
 }

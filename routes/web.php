@@ -83,6 +83,7 @@ Route::middleware('auth', 'web')->group(function () {
 
     Route::post('/users/vendors/{vendor}/payments', [VendorsController::class, 'storePayment'])->name('vendors.payments.store');
     Route::post('/users/vendors/{vendor}/credits', [VendorsController::class, 'storeCredit'])->name('vendors.credits.store');
+    Route::get('/users/vendors/{vendor}/refreshBalance', [VendorsController::class, 'refreshBalance'])->name('vendors.refreshBalance');
 
     Route::get('/users/customers', [CustomersController::class, 'index'])->name('customers.index');
     Route::get('/users/salesreps', [SalesrepsController::class, 'index'])->name('salesreps.index');

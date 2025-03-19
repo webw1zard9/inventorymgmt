@@ -58,7 +58,9 @@
                         <dd class="col-6"><span class="text-danger">({{ display_currency($vendor_transactions->sum('amount')) }})</span></dd>
 
                         <dt class="col-6 text-right"><h4>Balance:</h4></dt>
-                        <dd class="col-6"><h4>{{ display_currency($vendor->balance) }}</h4></dd>
+                        <dd class="col-6"><h4>{{ display_currency($vendor->balance) }}</h4>
+                            @if(Auth::user()->isSuperAdmin())<a href="{{ route('vendors.refreshBalance', $vendor) }}">Refresh Balance</a>@endif
+                        </dd>
 
                         <dt class="col-6 text-right"><h4>Due Now:</h4></dt>
                         <dd class="col-6">
