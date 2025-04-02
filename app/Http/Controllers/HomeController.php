@@ -11,31 +11,21 @@ use App\SaleOrder;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 class HomeController extends Controller
 {
-    protected $notifications;
+    protected View $view;
 
-    protected $todays_orders;
-
-    protected $weeks_orders;
-
-    protected $months_orders;
-
-    protected $quarter_orders;
+    protected Collection $notifications;
 
     protected $customers;
 
-    protected $new_customers;
+    protected Request $request;
 
-    protected $order_batch_locations;
-
-    protected $intake_batch_locations;
-
-    protected $order_discount_approvals;
-
-    protected $request;
+    protected array $date_range;
 
     /**
      * Show the application dashboard.
@@ -58,10 +48,8 @@ class HomeController extends Controller
         if ($order_discounts || $order_lines_discounts) {
             $this->notifications->push('Some orders need discount approvals. <a href="'.route('sale-orders.discount-approval').'">Click Here</a>');
         }
-//        dump(Auth::user()->isAdmin());
-        //dump(Auth::user()->hasRole('locationmanager'));
+
         if (Auth::user()->isAdmin() || Auth::user()->hasRole('locationmanager')) {
-//            dump('t');
             return $this->admin_dashboard();
         }
 
@@ -185,8 +173,87 @@ class HomeController extends Controller
         return response()->stream($callback, 200, $headers);
     }
 
-    protected function admin_dashboard()
+    protected function admin_dashboard(): View
     {
+        $this->setDatePresets(view('index'));
+
+        if (Auth::user()->hasPermission('dashboard.inventory_location')) {
+            $category_location_inventory = Batch::currentInventory(null, ['category'])->get();
+
+            $category_price_ranges = (new Category())->getPriceRanges()->groupBy('location_name');
+
+            $this->view->with('category_location_inventory', $category_location_inventory);
+            $this->view->with('category_price_ranges', $category_price_ranges);
+        }
+
+        if (Auth::user()->hasPermission('dashboard.inventory_vendor')) {
+            $vendor_location_inventory = Batch::InventoryByVendorLocation()->get();
+            $this->view->with('vendor_location_inventory', $vendor_location_inventory);
+        }
+
+        $this->getRevenueSummary();
+
+        $this->getRevenueByCategory();
+
+        if (Auth::user()->hasPermission('dashboard.top_products_by_category')) {
+            $top_products_by_category = (new Category())->topProducts($this->date_range);
+            $this->view->with('top_products_by_category', $top_products_by_category);
+        }
+
+        $this->getSalesRepRevenueByCategory();
+
+        $this->view->with('warnings', $this->notifications);
+
+        return $this->view;
+    }
+
+    protected function manager(): View
+    {
+        return view('dashboard.manager');
+    }
+
+    protected function buyer(): View
+    {
+        return view('dashboard.buyer');
+    }
+
+    protected function location_manager_dashboard(): View
+    {
+        return view('index')->with('warnings', $this->notifications);
+    }
+
+    protected function sales_rep_dashboard(): View
+    {
+        $this->setDatePresets(view('dashboard.sales-rep'));
+
+        $this->getRevenueSummary();
+
+        $this->getRevenueByCategory();
+
+        $this->getSalesRepRevenueByCategory();
+
+        return $this->view;
+    }
+
+    protected function sauce(): View
+    {
+        return view('dashboard.sauce');
+    }
+
+    protected function vendor(): View
+    {
+        return view('dashboard.vendor');
+    }
+
+    protected function customer(): View
+    {
+        return view('dashboard.customer');
+    }
+
+    private function setDatePresets(View $view): void
+    {
+        $this->view = $view;
+
         $date_presets = date_presets();
 
         if ($this->request->session()->has('dashboard_date_range') && ! $this->request->has('from')) {
@@ -204,97 +271,35 @@ class HomeController extends Controller
             $this->request->session()->put('dashboard_date_preset', $date_preset);
         }
 
-        $view = view('index');
+        $this->date_range = $date_range;
 
-        $view->with('date_presets', $date_presets)
+        $this->view->with('date_presets', $date_presets)
             ->with('date_preset', $date_preset)
             ->with('from', $from)
             ->with('to', $to);
+    }
 
-        if (Auth::user()->hasPermission('dashboard.inventory_location')) {
-//            $category_location_inventory = Batch::InventoryByCategoryLocation()->get();
-            $category_location_inventory = Batch::currentInventory(null, ['category'])->get();
-
-            $category_price_ranges = (new Category())->getPriceRanges()->groupBy('location_name');
-
-            $view->with('category_location_inventory', $category_location_inventory);
-            $view->with('category_price_ranges', $category_price_ranges);
-        }
-
-        if (Auth::user()->hasPermission('dashboard.inventory_vendor')) {
-            $vendor_location_inventory = Batch::InventoryByVendorLocation()->get();
-            $view->with('vendor_location_inventory', $vendor_location_inventory);
-        }
-
+    private function getRevenueSummary(): void
+    {
         if (Auth::user()->hasPermission('dashboard.revenue_summary')) {
-            $sales_by_location = (new SaleOrder())->sales_by_location($date_range);
-            $view->with('sales_by_location', $sales_by_location);
+            $sales_by_location = (new SaleOrder())->sales_by_location($this->date_range);
+            $this->view->with('sales_by_location', $sales_by_location);
         }
+    }
 
+    private function getRevenueByCategory(): void
+    {
         if (Auth::user()->hasPermission('dashboard.revenue_by_category')) {
-            $category_sales = (new Category())->revenue($date_range);
-            $view->with('category_sales', $category_sales);
+            $category_sales = (new Category())->revenue($this->date_range);
+            $this->view->with('category_sales', $category_sales);
         }
+    }
 
-        if (Auth::user()->hasPermission('dashboard.top_products_by_category')) {
-            $top_products_by_category = (new Category())->topProducts($date_range);
-            $view->with('top_products_by_category', $top_products_by_category);
-        }
-
+    private function getSalesRepRevenueByCategory(): void
+    {
         if (Auth::user()->hasPermission('dashboard.sales_rep_revenue_by_category')) {
-            $sales_rep_orders_by_category_with_revenue = (new SaleOrder())->sales_by_location_sales_rep($date_range);
-            $view->with('sales_rep_orders_by_category_with_revenue', $sales_rep_orders_by_category_with_revenue);
+            $sales_rep_orders_by_category_with_revenue = (new SaleOrder())->sales_by_location_sales_rep($this->date_range);
+            $this->view->with('sales_rep_orders_by_category_with_revenue', $sales_rep_orders_by_category_with_revenue);
         }
-
-        $view->with('warnings', $this->notifications);
-
-        return $view;
-    }
-
-    protected function manager()
-    {
-        return view('dashboard.manager');
-    }
-
-    protected function buyer()
-    {
-        return view('dashboard.buyer');
-    }
-
-    protected function location_manager_dashboard()
-    {
-        return view('index')->with('warnings', $this->notifications);
-    }
-
-    protected function sales_rep_dashboard()
-    {
-        $todays_orders = (new SaleOrder())->todaysOrders();
-
-        $weeks_orders = (new SaleOrder())->weeksOrders();
-
-        $months_orders = (new SaleOrder())->monthsOrders();
-
-//        $quarter_orders = (new SaleOrder())->quartersOrders();
-
-        return view('dashboard.sales-rep')->with([
-            'todays_orders' => $todays_orders,
-            'weeks_orders' => $weeks_orders,
-            'months_orders' => $months_orders,
-        ]);
-    }
-
-    protected function sauce()
-    {
-        return view('dashboard.sauce');
-    }
-
-    protected function vendor()
-    {
-        return view('dashboard.vendor');
-    }
-
-    protected function customer()
-    {
-        return view('dashboard.customer');
     }
 }

@@ -1,6 +1,4 @@
-
-@anypermission("dashboard.revenue_by_category", "dashboard.top_products_by_category", "dashboard.sales_rep_revenue_by_category")
-
+@anypermission('dashboard.revenue_summary', "dashboard.revenue_by_category", "dashboard.top_products_by_category", "dashboard.sales_rep_revenue_by_category")
 <div class="row">
     <div class="col-12">
         <div class="card-box">
@@ -8,7 +6,6 @@
         </div>
     </div>
 </div>
-
 @endanypermission
 
 @permission('dashboard.revenue_summary')
@@ -32,14 +29,13 @@
                     </select>
                 </div>
             </div>
-
         </div>
-
     </div>
 </div>
 
 <div class="row">
 
+    <!-- TOTALS if there are more than one location -->
     @if($sales_by_location->count() > 1)
     <div class="col-lg-3 col-md-6">
         <div class="widget-bg-color-icon card-box">
@@ -81,7 +77,6 @@
 </div>
 
 @endpermission
-
 
 <div class="row">
 
@@ -227,52 +222,7 @@
                     }
                 },
             };
-
-            const revChart = new Chart(ctx, config);
-
-            return revChart;
+            return new Chart(ctx, config);
         }
-
-
     </script>
-
-{{--    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>--}}
-{{--    <script type="text/javascript">--}}
-{{--        google.charts.load('current', {'packages':['corechart']});--}}
-{{--        google.charts.setOnLoadCallback(drawChart);--}}
-
-{{--        function drawChart() {--}}
-
-{{--            var data1 = @json($location_inventory_arr);--}}
-{{--// console.log(data1);--}}
-
-{{--            // var t = [--}}
-{{--            //     ['Task', 'Hours per Day'],--}}
-{{--            //     ['Work',     11],--}}
-{{--            //     ['Eat',      2],--}}
-{{--            //     ['Commute',  2],--}}
-{{--            //     ['Watch TV', 2],--}}
-{{--            //     ['Sleep',    7]--}}
-{{--            // ];--}}
-
-{{--            // console.log(t);--}}
-
-{{--            --}}{{--console.log(@json($location_inventory_arr));--}}
-
-{{--            // console.log(data1);--}}
-{{--            var data = google.visualization.arrayToDataTable(data1);--}}
-
-
-{{--console.log(data);--}}
-{{--            var options = {--}}
-{{--                title: 'My Daily Activities',--}}
-{{--                responsive: true,--}}
-{{--            };--}}
-
-{{--            var chart = new google.visualization.PieChart(document.getElementById('piechart'));--}}
-
-{{--            chart.draw(data, options);--}}
-{{--        }--}}
-{{--    </script>--}}
-
 @endsection

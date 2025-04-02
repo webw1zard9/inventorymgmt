@@ -30,7 +30,7 @@ class UserOrderScope implements Scope
             }
 
             if (Auth::user()->hasRole('salesrep')) {
-                $builder->where('sales_rep_id', Auth::user()->id);
+                $builder->where($model->getTable().'.sales_rep_id', Auth::user()->id);
             }
         }
     }

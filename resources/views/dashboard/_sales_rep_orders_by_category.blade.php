@@ -2,7 +2,7 @@
 
     <div class="card-box">
 
-        <h4 class="text-dark  header-title m-t-0 m-b-30">Sales Rep Sales By Category</h4>
+        <h4 class="text-dark  header-title m-t-0 m-b-30">Sales Rep Sales By Category Before Order Discounts</h4>
 
         <div class="row">
         @foreach($sales_rep_orders_by_category_with_revenue->groupBy('location') as $location => $sale_orders)

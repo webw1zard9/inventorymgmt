@@ -5,9 +5,6 @@
 
     <h2>Hello, {{ Auth::user()->name }}</h2>
 
-    @include('dashboard._orders')
+    @include('dashboard._admin')
 
 @endsection
-
-
-
