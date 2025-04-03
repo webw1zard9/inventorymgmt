@@ -12,7 +12,6 @@ class DashboardController extends Controller
 
     public function revenue(Request $request, $time = 'week')
     {
-
         if ($request->session()->has('dashboard_date_range')) {
             $date_range = $request->session()->get('dashboard_date_range');
         }

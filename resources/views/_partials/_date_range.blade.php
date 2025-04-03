@@ -2,9 +2,7 @@
     <div class="col-12 col-xl-2 col-lg-4">
         @include('_partials._preset_date')
     </div>
-
-    @if($date_preset === 'custom')
-    <div id="custom_date_range" class="col-12 col-xl-10 col-lg-8">
+        <div id="custom_date_range" class="col-12 col-xl-10 col-lg-8" style="display: {{ ($date_preset == 'Custom' ? "block" : "none") }}">
         <div class="row">
             <div class="col-6 col-md-4 col-xl-3">
                 @include('_partials._from_date')
@@ -19,7 +17,6 @@
             </div>
         </div>
     </div>
-    @endif
 
 </div>
 
@@ -32,7 +29,7 @@
 
             $('#date_preset').change(function (e) {
 
-                if ($('#date_preset option:selected').val() == 'Custom') {
+                if ($('#date_preset option:selected').val() === 'Custom') {
                     $('#custom_date_range').show();
                 } else {
                     $('#custom_date_range').hide();

@@ -1,4 +1,3 @@
-
 <div class="col-lg-5">
 
     <div class="card-box">
@@ -6,7 +5,6 @@
 
         <div class="row">
             <div class="col-12">
-{{--                <div style="height: 325px; overflow-y: auto;">--}}
                 <table class="table" id="sales_by_category">
                     <thead>
                     <tr>
@@ -25,10 +23,8 @@
                     </tbody>
 
                 </table>
-{{--                </div>--}}
             </div>
         </div>
     </div>
 
 </div>
-

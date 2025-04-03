@@ -235,7 +235,6 @@ $(function () {
 
             $('.tab-pane:is(.active)').find('.required').each(function (idx, elem) {
                 $(elem).attr('required', true);
-                console.log(elem);
             });
         } else {
             $('form#add-batch-item').find('.required').each(function (idx, elem) {

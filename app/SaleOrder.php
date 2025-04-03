@@ -884,6 +884,20 @@ class SaleOrder extends Order
                 ->get();
     }
 
+    public function sales_by_rep($dates)
+    {
+        return static::select(
+            'users.name',
+            DB::raw('sum(orders.total) as total'),
+            DB::raw('count(orders.id) as count')
+        )
+            ->join('users', 'orders.sales_rep_id', '=', 'users.id')
+            ->deliveredOrders()
+            ->withDateRange($dates)
+            ->groupBy('users.name')
+            ->get();
+    }
+
     public function sales_by_location_sales_rep($dates)
     {
         return static::select([
@@ -907,6 +921,27 @@ class SaleOrder extends Order
 
     }
 
+    public function sales_rep_by_day($dates)
+    {
+        return static::select(
+            'users.name as location_name',
+            DB::raw('date_format(orders.delivered_at, "%a %m/%d") as day_year'),
+            DB::raw('round(sum(orders.total), 0) as total')
+        )
+            ->join('users', 'orders.sales_rep_id', '=', 'users.id')
+            ->deliveredOrders()
+            ->withDateRange($dates)
+            ->groupBy(
+                'users.name',
+                DB::raw('YEAR(delivered_at)'),
+                DB::raw('DAYOFYEAR(delivered_at)'),
+                DB::raw('date_format(delivered_at, "%a %m/%d")')
+            )
+            ->orderBy(DB::raw('YEAR(delivered_at)'))
+            ->orderBy(DB::raw('DAYOFYEAR(delivered_at)'))
+            ->get();
+    }
+
     public function sales_by_day($dates)
     {
         return static::select(
@@ -925,7 +960,6 @@ class SaleOrder extends Order
             )
             ->orderBy(DB::raw('YEAR(delivered_at)'))
             ->orderBy(DB::raw('DAYOFYEAR(delivered_at)'))
-//            ->orderBy(DB::raw('location_name'))
             ->get();
     }
 

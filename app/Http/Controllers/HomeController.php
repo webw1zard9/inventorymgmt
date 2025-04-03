@@ -29,8 +29,6 @@ class HomeController extends Controller
 
     /**
      * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
     {
@@ -49,29 +47,7 @@ class HomeController extends Controller
             $this->notifications->push('Some orders need discount approvals. <a href="'.route('sale-orders.discount-approval').'">Click Here</a>');
         }
 
-        if (Auth::user()->isAdmin() || Auth::user()->hasRole('locationmanager')) {
-            return $this->admin_dashboard();
-        }
-
-        if (Auth::user()->hasRole('locationmanager')) {
-            return $this->location_manager_dashboard();
-        }
-
-        if (Auth::user()->hasRole('salesrep')) {
-            return $this->sales_rep_dashboard();
-        }
-
-        if (Auth::user()->hasRole('vendor')) {
-            return $this->vendor();
-        }
-
-        if (Auth::user()->hasRole('customer')) {
-            return $this->customer();
-        }
-
-        if (Auth::user()->hasRole('sauce')) {
-            return $this->sauce();
-        }
+        return $this->dashboard();
     }
 
     public function switchLocation(Location $location)
@@ -173,32 +149,19 @@ class HomeController extends Controller
         return response()->stream($callback, 200, $headers);
     }
 
-    protected function admin_dashboard(): View
+    protected function dashboard(): View
     {
-        $this->setDatePresets(view('index'));
-
-        if (Auth::user()->hasPermission('dashboard.inventory_location')) {
-            $category_location_inventory = Batch::currentInventory(null, ['category'])->get();
-
-            $category_price_ranges = (new Category())->getPriceRanges()->groupBy('location_name');
-
-            $this->view->with('category_location_inventory', $category_location_inventory);
-            $this->view->with('category_price_ranges', $category_price_ranges);
-        }
-
-        if (Auth::user()->hasPermission('dashboard.inventory_vendor')) {
-            $vendor_location_inventory = Batch::InventoryByVendorLocation()->get();
-            $this->view->with('vendor_location_inventory', $vendor_location_inventory);
-        }
+        $this->setDatePresets(view('dashboard.index'));
 
         $this->getRevenueSummary();
 
+        $this->getInventoryLocation();
+
+        $this->getInventoryVendor();
+
         $this->getRevenueByCategory();
 
-        if (Auth::user()->hasPermission('dashboard.top_products_by_category')) {
-            $top_products_by_category = (new Category())->topProducts($this->date_range);
-            $this->view->with('top_products_by_category', $top_products_by_category);
-        }
+        $this->topProductByCategory();
 
         $this->getSalesRepRevenueByCategory();
 
@@ -207,56 +170,13 @@ class HomeController extends Controller
         return $this->view;
     }
 
-    protected function manager(): View
-    {
-        return view('dashboard.manager');
-    }
-
-    protected function buyer(): View
-    {
-        return view('dashboard.buyer');
-    }
-
-    protected function location_manager_dashboard(): View
-    {
-        return view('index')->with('warnings', $this->notifications);
-    }
-
-    protected function sales_rep_dashboard(): View
-    {
-        $this->setDatePresets(view('dashboard.sales-rep'));
-
-        $this->getRevenueSummary();
-
-        $this->getRevenueByCategory();
-
-        $this->getSalesRepRevenueByCategory();
-
-        return $this->view;
-    }
-
-    protected function sauce(): View
-    {
-        return view('dashboard.sauce');
-    }
-
-    protected function vendor(): View
-    {
-        return view('dashboard.vendor');
-    }
-
-    protected function customer(): View
-    {
-        return view('dashboard.customer');
-    }
-
     private function setDatePresets(View $view): void
     {
         $this->view = $view;
 
         $date_presets = date_presets();
 
-        if ($this->request->session()->has('dashboard_date_range') && ! $this->request->has('from')) {
+        if ($this->request->session()->has('dashboard_date_range') && !$this->request->has('from')) {
             $date_preset = $this->request->session()->get('dashboard_date_preset');
             $date_range = $this->request->session()->get('dashboard_date_range');
             $from = $date_range[0];
@@ -279,11 +199,49 @@ class HomeController extends Controller
             ->with('to', $to);
     }
 
+    private function getInventoryLocation(): void
+    {
+        if (Auth::user()->hasPermission('dashboard.inventory_location')) {
+            $category_location_inventory = Batch::currentInventory(null, ['category'])->get();
+
+            $category_price_ranges = (new Category())->getPriceRanges()->groupBy('location_name');
+
+            $this->view->with('category_location_inventory', $category_location_inventory);
+            $this->view->with('category_price_ranges', $category_price_ranges);
+        }
+    }
+
+    private function getInventoryVendor():void
+    {
+        if (Auth::user()->hasPermission('dashboard.inventory_vendor')) {
+            $vendor_location_inventory = Batch::InventoryByVendorLocation()->get();
+            $this->view->with('vendor_location_inventory', $vendor_location_inventory);
+        }
+    }
+
+    private function topProductByCategory(): void
+    {
+        if (Auth::user()->hasPermission('dashboard.top_products_by_category')) {
+            $top_products_by_category = (new Category())->topProducts($this->date_range);
+            $this->view->with('top_products_by_category', $top_products_by_category);
+        }
+    }
+
     private function getRevenueSummary(): void
     {
         if (Auth::user()->hasPermission('dashboard.revenue_summary')) {
-            $sales_by_location = (new SaleOrder())->sales_by_location($this->date_range);
-            $this->view->with('sales_by_location', $sales_by_location);
+
+            if(Auth::user()->hasRole('locationmanager')) {
+
+                $sale_by_rep = (new SaleOrder())->sales_by_rep($this->date_range);
+                $this->view->with('sales_by_rep', $sale_by_rep);
+
+            } else {
+
+                $sales_by_location = (new SaleOrder())->sales_by_location($this->date_range);
+                $this->view->with('sales_by_location', $sales_by_location);
+
+            }
         }
     }
 
